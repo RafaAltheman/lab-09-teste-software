@@ -1,7 +1,7 @@
 
 ## Ex1
 
-### a) Cobertura inicial e mutantes
+### a) 
 
 A suíte inicial contém dois testes: um aluno aprovado, com média 8,0 e presença de 80%, e um aluno reprovado por nota, com média 3,0 e presença de 90%.
 
@@ -13,11 +13,11 @@ Isso ocorre porque a suíte inicial não testa todas as possibilidades de classi
 
 Resultados dos mutantes:
 
-- Mutantes gerados: [preencher após executar mutmut]
-- Mutantes mortos: [preencher]
-- Mutantes vivos: [preencher]
+- Mutantes gerados: 24
+- Mutantes mortos: 2
+- Mutantes vivos: 22
 
-### b) Causas dos mutantes vivos
+### b) 
 
 Os mutantes sobreviventes podem ser agrupados de acordo com os comportamentos que não são verificados pelos testes iniciais.
 
@@ -31,8 +31,7 @@ As linhas do código original não executadas incluem as linhas 3, 5, 7 e 11, co
 
 A identificação específica de cada mutante deve ser realizada utilizando os comandos `mutmut results` e `mutmut show`.
 
-### c) Melhoria da suíte e escore final
-
+### c) 
 A suíte foi ampliada para incluir testes dos valores-limite, situações de recuperação, reprovação por falta, presença mínima exigida e entradas inválidas.
 
 Foram adicionados testes para médias iguais a 5,0 e 7,0, valores próximos desses limites, presença de 75%, frequência abaixo do mínimo e valores fora das faixas permitidas.
@@ -47,12 +46,11 @@ O escore é calculado por:
 
 MS = mortos / (gerados - equivalentes) × 100%
 
-- Mutantes equivalentes: [preencher]
-- MS inicial: [preencher]
-- MS final: [preencher]
+- Mutantes equivalentes: 0
+- MS inicial: 2 / (24 − 0) × 100% = **8,3%**
+- MS final: 24 / (24 − 0) × 100% = **100%**
 
-### d) Verificação de exceções com pytest.raises
-
+### d)
 Ao utilizar `pytest.raises(ValueError, match=msg)`, o teste passa a verificar tanto o tipo da exceção quanto a mensagem apresentada.
 
 Anteriormente, verificar apenas a ocorrência de `ValueError` permitiria que modificações no texto da mensagem não fossem detectadas.
@@ -63,9 +61,9 @@ Como `match` interpreta uma expressão regular, foram usados os delimitadores `^
 
 ---
 
-## Exercício 2 — Desconto Progressivo
+## Ex2
 
-### a) Cobertura de ramos e escore inicial
+### a)
 
 A suíte inicial realiza uma única verificação, confirmando que o resultado do carrinho é maior que zero.
 
@@ -79,12 +77,12 @@ Um resultado incorreto continuaria passando no teste desde que fosse positivo.
 
 Portanto, a cobertura mede os caminhos executados, enquanto o escore de mutação mede a capacidade dos testes de perceber mudanças no comportamento do programa.
 
-- Mutantes gerados: [preencher]
-- Mutantes mortos: [preencher]
-- Mutantes vivos: [preencher]
-- MS inicial: [preencher]
+- Mutantes gerados: 14
+- Mutantes mortos: 4
+- Mutantes vivos: 10
+- MS inicial: 4 / 14 × 100% = **28,6%**
 
-### b) Alteração do assert para o valor exato
+### b) 
 
 Foi mantida a lista de preços original:
 
@@ -104,9 +102,14 @@ A cobertura de ramos permanece em 100%, porque o caminho executado não mudou.
 
 Porém, a verificação se tornou mais rigorosa e passou a detectar alterações que modificam o resultado esperado.
 
-- Mutantes vivos após a alteração: [preencher]
+- Mutantes vivos após a alteração: 3 (de 14 gerados; 11 mortos, MS = 78,6%)
+  - `round(total, 2)` → `round(total, None)`
+  - `round(total, 2)` → `round(total)`
+  - `round(total, 2)` → `round(total, 3)`
 
-### c) Classificação dos mutantes sobreviventes
+Os três sobreviventes mexem apenas no arredondamento. Como a entrada `[10, 20, 30, 40, 50]` resulta em um total inteiro (141,00), arredondar com outra precisão não altera o valor retornado.
+
+### c) 
 
 A análise dos sobreviventes considera quatro condições fundamentais.
 
@@ -126,7 +129,7 @@ Outras mutações podem continuar sobrevivendo quando a entrada utilizada não p
 
 A classificação definitiva de cada sobrevivente deve ser feita com `mutmut show`.
 
-### d) Novas entradas e escore final
+### d) 
 
 Foram acrescentados testes com listas vazias, listas contendo menos de quatro itens, listas com exatamente quatro itens e diferentes combinações de preços.
 
@@ -142,13 +145,16 @@ Portanto, os preços fracionários são fundamentais para revelar mutações que
 
 A suíte final contém 10 casos de teste, todos aprovados, com cobertura de ramos de 100%.
 
-- MS final: [preencher após executar mutmut]
+- Mutantes gerados: 14
+- Mutantes mortos: 14
+- Mutantes equivalentes: 0
+- MS final: 14 / (14 − 0) × 100% = **100%**
 
 ---
 
-## Exercício 3 — Temperaturas da Semana
+## Ex3
 
-### a) Implementação inicial e mutantes vivos
+### a) 
 
 A suíte inicial utiliza as listas:
 
@@ -166,10 +172,20 @@ Entretanto, a suíte não verifica situações em que a maior temperatura aparec
 
 Assim, alguns mutantes podem sobreviver mesmo com todos os ramos executados.
 
-- Mutantes vivos: [preencher]
-- Identificadores e alterações: [preencher com mutmut show]
+- Mutantes gerados: 21
+- Mutantes vivos: 9
+- Alterações dos sobreviventes (linha do código original):
+  - `maior`, linha 5: `temps[1:]` → `temps[2:]`
+  - `maior`, linha 6: `t > m` → `t >= m`
+  - `dia_do_maior`, linha 15: `range(1, len(temps))` → `range(2, len(temps))`
+  - `dia_do_maior`, linha 15: `range(1, len(temps))` → `range(len(temps))`
+  - `dia_do_maior`, linha 16: `temps[i] > temps[pos]` → `temps[i] >= temps[pos]`
+  - linhas 3 e 13: `ValueError("lista vazia")` → `ValueError(None)`
+  - linhas 3 e 13: `"lista vazia"` → `"XXlista vaziaXX"`
 
-### b) Mutantes equivalentes e não equivalentes
+Os quatro últimos sobrevivem porque a suíte inicial confere apenas o tipo `ValueError`, sem verificar a mensagem.
+
+### b) 
 
 Na função `maior`, uma mutação que substitui `>` por `>=` é equivalente ao programa original.
 
@@ -187,7 +203,7 @@ Portanto, a alteração modifica o comportamento exigido pela especificação.
 
 Mutações apenas nas mensagens das exceções devem ser avaliadas conforme a exigência de validar somente o tipo do erro ou também seu texto.
 
-### c) Melhoria da suíte e comparação dos escores
+### c) 
 
 Foram acrescentadas listas com temperaturas máximas repetidas e diferentes posições para o maior valor.
 
@@ -204,12 +220,14 @@ Também foram incluídos casos com temperaturas negativas, listas crescentes e v
 
 Após as alterações, os 12 casos de teste passaram e a cobertura de ramos continuou em 100%.
 
-- MS inicial: [preencher]
-- Mutantes não equivalentes mortos: [preencher]
-- Mutantes equivalentes: [preencher]
-- MS final ajustado: [preencher]
+- MS inicial: 12 / (21 − 0) × 100% = **57,1%** (12 mortos, 9 vivos)
+- Mutantes não equivalentes mortos: 19
+- Mutantes equivalentes: 2
+  - `maior`, linha 6: `t > m` → `t >= m`
+  - `dia_do_maior`, linha 15: `range(1, len(temps))` → `range(len(temps))`, pois a primeira iteração compara `temps[0]` com ele mesmo (`temps[0] > temps[0]` é falso) e não altera `pos`
+- MS final ajustado: 19 / (21 − 2) × 100% = **100%** (sem ajuste, 19 / 21 = 90,5%)
 
-### d) Diferença entre as duas funções
+### d) 
 
 A equivalência depende do comportamento observável exigido pela especificação.
 
@@ -223,9 +241,9 @@ Assim, a mesma mutação pode ser equivalente em uma função e não equivalente
 
 ---
 
-## Exercício 4 — Parcelamento
+## Ex4e
 
-### a) Suíte construída por análise de valor-limite
+### a) 
 
 A função permite parcelamentos entre 1 e 12 parcelas.
 
@@ -250,7 +268,7 @@ Os valores -1, 0, 13 e 14 foram utilizados para verificar entradas inválidas.
 
 Essa suíte permite avaliar os limites inferior e superior e a transição entre parcelamentos com e sem juros.
 
-### b) Cobertura e escore de mutação
+### b)
 
 A suíte inicial de valor-limite contém 10 casos de teste.
 
@@ -262,12 +280,12 @@ A cobertura elevada demonstra que as principais decisões do programa foram exer
 
 Entretanto, isso não garante que todas as mutações sejam detectadas, pois certas alterações podem produzir resultados iguais para os valores utilizados.
 
-- Mutantes gerados: [preencher]
-- Mutantes mortos: [preencher]
-- Mutantes vivos: [preencher]
-- MS inicial: [preencher]
+- Mutantes gerados: 26
+- Mutantes mortos: 25
+- Mutantes vivos: 1 (`n <= 3` → `n < 3`)
+- MS inicial: 25 / 26 × 100% = **96,2%**
 
-### c) Análise dos sobreviventes e escore final
+### c)
 
 Para melhorar a suíte, foram incluídos testes com valores intermediários de parcelas, valores monetários fracionários e situações que exigem arredondamento.
 
@@ -295,7 +313,7 @@ Quando a mutação não altera nenhum resultado observável, deve ser classifica
 
 O escore final deve excluir os mutantes equivalentes do denominador.
 
-- Mutantes mortos após as melhorias: [preencher]
-- Mutantes equivalentes identificados: [preencher]
-- MS final: [preencher]
+- Mutantes mortos após as melhorias: 25 (os mesmos da suíte inicial; os testes novos reforçam a suíte, mas a análise de valor-limite já matava todos os mutantes não equivalentes)
+- Mutantes equivalentes identificados: 1 (`n <= 3` → `n < 3`)
+- MS final: 25 / (26 − 1) × 100% = **100%** (sem ajuste, 25 / 26 = 96,2%)
 
